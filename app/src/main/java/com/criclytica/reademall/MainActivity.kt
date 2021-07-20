@@ -6,6 +6,9 @@ import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
+import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,6 +21,9 @@ class MainActivity : AppCompatActivity() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = ListRVAdapter()
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
