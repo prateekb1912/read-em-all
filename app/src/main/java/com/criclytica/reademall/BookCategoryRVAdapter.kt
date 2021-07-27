@@ -5,12 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import java.security.AccessController.getContext
 
-val bookCategories = arrayOf("2022 Reading List", "Non-Fiction", "Fiction", "Self-Help")
 
-class BookCategoryRVAdapter : RecyclerView.Adapter<BookCategoryRVAdapter.CategorySelectViewHolder>() {
 
+
+class BookCategoryRVAdapter(private val bookCategories: ArrayList<String>) : RecyclerView.Adapter<BookCategoryRVAdapter.CategorySelectViewHolder>() {
 
     class CategorySelectViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val listPosition = itemView.findViewById(R.id.tvItemNum) as TextView
