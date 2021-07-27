@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.ListAdapter
 import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -22,7 +21,7 @@ class MainActivity : AppCompatActivity() {
                     .setAction("Action", null).show()
         }
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = ListRVAdapter()
+        recyclerView.adapter = BookCategoryRVAdapter()
 
     }
 
