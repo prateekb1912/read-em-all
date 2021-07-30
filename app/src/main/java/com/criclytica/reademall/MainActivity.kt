@@ -1,12 +1,16 @@
 package com.criclytica.reademall
 
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,12 +25,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-        findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+        findViewById<FloatingActionButton>(R.id.fab).setOnClickListener {
+            showCreateCategoryDialog()
         }
 
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = BookCategoryRVAdapter(bookCategories)
 
         setRecyclerViewItemTouchListener()
@@ -63,5 +66,22 @@ class MainActivity : AppCompatActivity() {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun showCreateCategoryDialog() {
+        val dialogTitle = getString(R.string.name_of_categ)
+        val positiveButtonTitle = getString(R.string.create)
+
+        val builder = AlertDialog.Builder(this)
+        val etNewCategory = EditText(this)
+        etNewCategory.inputType = InputType.TYPE_CLASS_TEXT
+
+        builder.setTitle(dialogTitle)
+                .setView(etNewCategory)
+                .setPositiveButton(positiveButtonTitle) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .create()
+                .show()
     }
 }
