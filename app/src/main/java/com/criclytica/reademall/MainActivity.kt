@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
             showCreateCategoryDialog()
         }
 
-        recyclerView.layoutManager = GridLayoutManager(this, 2)
+        recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = BookCategoryRVAdapter(bookCategories)
 
         setRecyclerViewItemTouchListener()
