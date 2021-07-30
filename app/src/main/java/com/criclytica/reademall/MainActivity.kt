@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.content_main.*
 class MainActivity : AppCompatActivity() {
 
     val bookCategories: ArrayList<String> = arrayListOf("2022 Reading List", "Non-Fiction", "Fiction", "Self-Help")
+    val listDataManager: CategoryListDataManager = CategoryListDataManager(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +30,10 @@ class MainActivity : AppCompatActivity() {
             showCreateCategoryDialog()
         }
 
+        val lists = listDataManager.readLists()
+
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = BookCategoryRVAdapter(bookCategories)
+        recyclerView.adapter = BookCategoryRVAdapter(lists)
 
         setRecyclerViewItemTouchListener()
 
@@ -79,6 +82,12 @@ class MainActivity : AppCompatActivity() {
         builder.setTitle(dialogTitle)
                 .setView(etNewCategory)
                 .setPositiveButton(positiveButtonTitle) { dialog, _ ->
+                    val list = CategoryList(etNewCategory.text.toString())
+                    listDataManager.saveList(list)
+
+                    val recyclerAdapter = recyclerView.adapter as BookCategoryRVAdapter
+                    recyclerAdapter.addList(list)
+
                     dialog.dismiss()
                 }
                 .create()
