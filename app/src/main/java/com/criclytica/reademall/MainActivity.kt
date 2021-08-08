@@ -34,9 +34,21 @@ class MainActivity : AppCompatActivity() {
 
         db = DBHelper(this).writableDatabase
 
+        refreshCategoryList()
+
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener {
             showCreateCategoryDialog()
         }
+    }
+
+    private fun refreshCategoryList() {
+        val bookList = BookListsTable.getAllLists(db)
+        bookLists.clear()
+        bookLists.addAll(bookList)
+
+        recyclerView.adapter?.notifyDataSetChanged()
+
+        Log.d("BOOKS", bookLists[bookLists.size - 1].toString())
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -78,10 +90,5 @@ class MainActivity : AppCompatActivity() {
                 .show()
 
         refreshCategoryList()
-    }
-
-    fun refreshCategoryList() {
-        val bookList = BookListsTable.getAllLists(db)
-        Log.d("BOOKS", bookList.toString())
     }
 }
