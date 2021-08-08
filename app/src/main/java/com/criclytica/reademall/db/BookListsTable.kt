@@ -1,5 +1,9 @@
 package com.criclytica.reademall.db
 
+import android.content.ContentValues
+import android.database.sqlite.SQLiteDatabase
+import com.criclytica.reademall.CategoryList
+
 object BookListsTable {
     val TABLE_NAME = "bookLists"
 
@@ -18,6 +22,38 @@ object BookListsTable {
         );
     """.trimIndent()
 
+    fun insertList(db: SQLiteDatabase, list: CategoryList) {
+        val row = ContentValues()
+        row.put(Columns.LIST, list.name)
+        row.put(Columns.READ, list.read)
 
+        db.insert(TABLE_NAME, null, row)
+    }
+
+    fun getAllLists(db: SQLiteDatabase): ArrayList<CategoryList> {
+        val lists = ArrayList<CategoryList>()
+
+        var cursor = db.query(
+                TABLE_NAME,
+                arrayOf(Columns.ID, Columns.LIST, Columns.READ),
+                null,
+                null,
+                null,
+                null,
+                null
+        )
+
+        while (cursor.moveToNext()) {
+            val list = CategoryList(
+                    cursor.getInt(0),
+                    cursor.getString(1),
+                    cursor.getString(2).toBoolean()
+            )
+
+            lists.add(list)
+        }
+
+        return lists
+    }
 
 }

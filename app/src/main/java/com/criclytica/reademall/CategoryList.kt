@@ -1,4 +1,4 @@
 package com.criclytica.reademall
 
-class CategoryList(val name: String, val tasks: ArrayList<String> = ArrayList()) {
+class CategoryList(var id: Int, var name: String, var read: Boolean) {
 }
