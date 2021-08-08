@@ -18,19 +18,19 @@ import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    val bookCategories: ArrayList<String> = arrayListOf("2022 Reading List", "Non-Fiction", "Fiction", "Self-Help")
-    val listDataManager: CategoryListDataManager = CategoryListDataManager(this)
+    private val listDataManager: CategoryListDataManager = CategoryListDataManager(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
+        val lists = listDataManager.readLists()
+
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener {
             showCreateCategoryDialog()
+            Log.e("SIZE", lists.size.toString())
         }
-
-        val lists = listDataManager.readLists()
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = BookCategoryRVAdapter(lists)
@@ -47,7 +47,14 @@ class MainActivity : AppCompatActivity() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                bookCategories.removeAt(position)
+                val lists = listDataManager.readLists()
+
+                Log.i("SIZE", lists.size.toString())
+
+                listDataManager.removeCategory(lists, position)
+                lists.removeAt(position)
+
+                Log.i("SIZE_AFTER", lists.size.toString())
                 recyclerView.adapter!!.notifyItemRemoved(position)
             }
         }

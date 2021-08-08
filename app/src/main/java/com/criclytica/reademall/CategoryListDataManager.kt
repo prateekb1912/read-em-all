@@ -2,10 +2,11 @@ package com.criclytica.reademall
 
 import android.content.Context
 import android.preference.PreferenceManager
+import android.util.Log
 
 class CategoryListDataManager(private val context: Context) {
     fun saveList(list: CategoryList) {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()
                 .putStringSet(list.name, list.tasks.toHashSet())
                 .apply()
@@ -25,5 +26,15 @@ class CategoryListDataManager(private val context: Context) {
         }
 
         return categoryLists
+    }
+
+    fun removeCategory(lists: ArrayList<CategoryList>, position: Int) {
+        val del = lists[position]
+
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .remove(del.name)
+                .apply()
+        Log.d("SIZE", lists.size.toString())
     }
 }
