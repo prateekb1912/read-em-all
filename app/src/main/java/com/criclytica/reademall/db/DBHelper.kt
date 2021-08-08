@@ -11,7 +11,7 @@ class DBHelper(context: Context): SQLiteOpenHelper(
         1
 ) {
     override fun onCreate(db: SQLiteDatabase?) {
-
+        db.execSQL(BookListsTable.CMD_CREATE_TABLE)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
