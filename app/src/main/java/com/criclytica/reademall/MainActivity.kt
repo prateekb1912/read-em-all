@@ -1,5 +1,6 @@
 package com.criclytica.reademall
 
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
@@ -14,52 +15,28 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.criclytica.reademall.db.BookListsTable
+import com.criclytica.reademall.db.DBHelper
 import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private val listDataManager: CategoryListDataManager = CategoryListDataManager(this)
+    val bookLists = ArrayList<CategoryList>()
+    lateinit var db: SQLiteDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-        val lists = listDataManager.readLists()
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = BookCategoryRVAdapter(bookLists)
+
+        db = DBHelper(this).writableDatabase
 
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener {
             showCreateCategoryDialog()
-            Log.e("SIZE", lists.size.toString())
         }
-
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = BookCategoryRVAdapter(lists)
-
-        setRecyclerViewItemTouchListener()
-
-    }
-
-    private fun setRecyclerViewItemTouchListener() {
-        val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-                return false
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val position = viewHolder.adapterPosition
-                val lists = listDataManager.readLists()
-
-                Log.i("SIZE", lists.size.toString())
-
-                listDataManager.removeCategory(lists, position)
-                lists.removeAt(position)
-
-                Log.i("SIZE_AFTER", lists.size.toString())
-                recyclerView.adapter!!.notifyItemRemoved(position)
-            }
-        }
-        val itemTouchHelper = ItemTouchHelper(itemTouchCallback)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -84,20 +61,27 @@ class MainActivity : AppCompatActivity() {
 
         val builder = AlertDialog.Builder(this)
         val etNewCategory = EditText(this)
+
         etNewCategory.inputType = InputType.TYPE_CLASS_TEXT
 
         builder.setTitle(dialogTitle)
                 .setView(etNewCategory)
                 .setPositiveButton(positiveButtonTitle) { dialog, _ ->
-                    val list = CategoryList(etNewCategory.text.toString())
-                    listDataManager.saveList(list)
+                    val newList = CategoryList(etNewCategory.text.toString(), false)
 
-                    val recyclerAdapter = recyclerView.adapter as BookCategoryRVAdapter
-                    recyclerAdapter.addList(list)
+                    BookListsTable.insertList(db, newList)
+                    bookLists.add(newList)
 
                     dialog.dismiss()
                 }
                 .create()
                 .show()
+
+        refreshCategoryList()
+    }
+
+    fun refreshCategoryList() {
+        val bookList = BookListsTable.getAllLists(db)
+        Log.d("BOOKS", bookList.toString())
     }
 }

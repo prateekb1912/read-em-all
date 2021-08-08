@@ -16,9 +16,9 @@ object BookListsTable {
     val CMD_CREATE_TABLE = """
         CREATE TABLE IF NOT EXISTS $TABLE_NAME
         (
-        ${Columns.ID} PRIMARY KEY INT AUTOINCREMENT,
+        ${Columns.ID}  INTEGER PRIMARY KEY AUTOINCREMENT,
         ${Columns.LIST} TEXT ,
-        ${Columns.READ} BOOLEAN,
+        ${Columns.READ} BOOLEAN
         );
     """.trimIndent()
 
@@ -45,7 +45,6 @@ object BookListsTable {
 
         while (cursor.moveToNext()) {
             val list = CategoryList(
-                    cursor.getInt(0),
                     cursor.getString(1),
                     cursor.getString(2).toBoolean()
             )
